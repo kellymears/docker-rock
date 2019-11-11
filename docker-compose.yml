@@ -23,6 +23,7 @@ services:
     image: mariadb
     restart: always
     environment:
+      MYSQL_DATABASE: ${db_name}
       MYSQL_ROOT_USERNAME: ${db_user}
       MYSQL_ROOT_PASSWORD: ${db_password}
       MYSQL_USERNAME: ${db_user}
