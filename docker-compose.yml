@@ -1,0 +1,38 @@
+version: '3'
+services:
+  database:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: dev_password
+    volumes:
+      - ./db:/var/lib/mysql
+
+  php:
+    build: ./build/php-fpm
+    restart: always
+    depends_on:
+      - database
+    links:
+      - database
+    environment:
+      foo: baz
+    volumes:
+      - ./app:/app
+
+  redis:
+    image: redis
+
+  nginx:
+    image: nginx
+    restart: always
+    depends_on:
+      - php
+    links:
+      - php
+    volumes:
+      - ./build/nginx/site.nginx.conf:/etc/nginx/conf.d/site.nginx.conf
+      - ./app:/app
+    ports:
+      - 8080:80
+      - 443:443
