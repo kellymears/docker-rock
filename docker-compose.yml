@@ -1,38 +1,49 @@
 version: '3'
 services:
-  database:
-    image: mariadb
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: dev_password
-    volumes:
-      - ./db:/var/lib/mysql
-
-  php:
+  bedrock:
     build: ./build/php-fpm
     restart: always
     depends_on:
-      - database
+      - mariadb
+      - redis
     links:
-      - database
+      - mariadb
     environment:
-      foo: baz
+      - DB_NAME="${db_name}"
+      - DB_USER=${db_user}
+      - DB_PASSWORD=${db_password}
+      - DB_HOST=${db_host}
+      - WP_ENV=${wp_env}
+      - WP_HOME="${wp_home}"
+      - WP_SITEURL="${wp_siteurl}"
     volumes:
-      - ./app:/app
+      - ./bedrock:/bedrock
+
+  mariadb:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_USERNAME: ${db_user}
+      MYSQL_ROOT_PASSWORD: ${db_password}
+      MYSQL_USERNAME: ${db_user}
+      MYSQL_PASSWORD: ${db_password}
+    volumes:
+      - ./db:/var/lib/mysql
 
   redis:
     image: redis
+    restart: always
 
   nginx:
     image: nginx
     restart: always
     depends_on:
-      - php
+      - bedrock
     links:
-      - php
-    volumes:
-      - ./build/nginx/site.nginx.conf:/etc/nginx/conf.d/site.nginx.conf
-      - ./app:/app
+      - bedrock
     ports:
-      - 8080:80
+      - 80:80
       - 443:443
+    volumes:
+      - ./bedrock:/bedrock
+      - ./build/nginx/conf.d:/etc/nginx/conf.d
