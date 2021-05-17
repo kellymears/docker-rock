@@ -1,21 +1,22 @@
-version: '3'
+version: "3"
 services:
-  bedrock:
+  app:
     build: ./build/php-fpm
     restart: always
+    user: web
     depends_on:
       - mariadb
       - redis
     links:
       - mariadb
     environment:
-      - DB_NAME="${db_name}"
-      - DB_USER=${db_user}
-      - DB_PASSWORD=${db_password}
-      - DB_HOST=${db_host}
-      - WP_ENV=${wp_env}
-      - WP_HOME="${wp_home}"
-      - WP_SITEURL="${wp_siteurl}"
+      DB_NAME: "${DB_NAME}"
+      DB_USER: "${DB_USER}"
+      DB_PASSWORD: "${DB_PASSWORD}"
+      DB_HOST: "${DB_HOST}"
+      WP_ENV: "${WP_ENV}"
+      WP_HOME: "${WP_HOME}"
+      WP_SITEURL: "${WP_SITEURL}"
     volumes:
       - ./bedrock:/bedrock
 
@@ -23,11 +24,10 @@ services:
     image: mariadb
     restart: always
     environment:
-      MYSQL_DATABASE: ${db_name}
-      MYSQL_ROOT_USERNAME: ${db_user}
-      MYSQL_ROOT_PASSWORD: ${db_password}
-      MYSQL_USERNAME: ${db_user}
-      MYSQL_PASSWORD: ${db_password}
+      MYSQL_DATABASE: "${DB_NAME}"
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+    ports:
+      - 3030
     volumes:
       - ./db:/var/lib/mysql
 
@@ -39,9 +39,9 @@ services:
     image: nginx
     restart: always
     depends_on:
-      - bedrock
+      - app
     links:
-      - bedrock
+      - app
     ports:
       - 80:80
       - 443:443
