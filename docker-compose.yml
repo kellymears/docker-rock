@@ -18,7 +18,13 @@ services:
       WP_HOME: "${WP_HOME}"
       WP_SITEURL: "${WP_SITEURL}"
     volumes:
-      - ./bedrock:/bedrock
+      - ./bedrock/web:/bedrock/web
+      - ./bedrock/config:/bedrock/config
+      - ./bedrock/.env:/bedrock/.env
+      - ./bedrock/composer.json:/bedrock/composer.json
+      - ./bedrock/composer.lock:/bedrock/composer.lock
+      - ./bedrock/phpcs.xml:/bedrock/phpcs.xml
+      - ./bedrock/wp-cli.yml:/bedrock/wp-cli.yml
 
   mariadb:
     image: mariadb
@@ -46,5 +52,5 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./bedrock:/bedrock
+      - ./bedrock/web:/bedrock/web
       - ./build/nginx/conf.d:/etc/nginx/conf.d
