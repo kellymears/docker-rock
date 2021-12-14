@@ -2,6 +2,7 @@
 .env
 /db
 node_modules
+bedrock
 
 /stub/docker/db/*
 /stub/docker/db/**/*
