@@ -1,4 +1,9 @@
 .env
-db/*
-!db/.gitkeep
-bedrock
+.env
+/db
+node_modules
+
+/stub/docker/db/*
+/stub/docker/db/**/*
+!/stub/docker/db/.gitkeep
+/.yarn

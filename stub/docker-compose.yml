@@ -1,7 +1,7 @@
 version: '3'
 services:
   app:
-    build: ./build/php-fpm
+    build: ./docker/php-fpm
     restart: always
     user: web
     depends_on:
@@ -18,13 +18,13 @@ services:
       WP_HOME: '${WP_HOME}'
       WP_SITEURL: '${WP_SITEURL}'
     volumes:
-      - ./bedrock/web:/bedrock/web
-      - ./bedrock/config:/bedrock/config
-      - ./bedrock/.env:/bedrock/.env
-      - ./bedrock/composer.json:/bedrock/composer.json
-      - ./bedrock/composer.lock:/bedrock/composer.lock
-      - ./bedrock/phpcs.xml:/bedrock/phpcs.xml
-      - ./bedrock/wp-cli.yml:/bedrock/wp-cli.yml
+      - ./web:/bedrock/web
+      - ./config:/bedrock/config
+      - ./.env:/bedrock/.env
+      - ./composer.json:/bedrock/composer.json
+      - ./composer.lock:/bedrock/composer.lock
+      - ./phpcs.xml:/bedrock/phpcs.xml
+      - ./wp-cli.yml:/bedrock/wp-cli.yml
 
   mariadb:
     image: mariadb
@@ -35,7 +35,7 @@ services:
     ports:
       - 3030
     volumes:
-      - ./db:/var/lib/mysql
+      - ./docker/db:/var/lib/mysql
 
   redis:
     image: redis
@@ -52,5 +52,5 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./bedrock/web:/bedrock/web
-      - ./build/nginx/conf.d:/etc/nginx/conf.d
+      - ./web:/bedrock/web
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
