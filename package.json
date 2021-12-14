@@ -14,7 +14,7 @@
   "exports": "./lib/index.js",
   "scripts": {
     "make": "run-s clean build",
-    "build": "ncc build ./src/index.ts --out ./lib --target es2020",
+    "build": "ncc build ./src/index.ts --out ./lib --external tsyringe",
     "clean": "rimraf ./lib/*"
   },
   "devDependencies": {
@@ -35,9 +35,12 @@
     "prettier": "^2.5.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "tsyringe": "^4.6.0",
     "typescript": "^4.5.4",
     "yamljs": "^0.3.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.1",
+    "tsyringe": "^4.6.0"
   },
   "packageManager": "yarn@3.1.1",
   "volta": {

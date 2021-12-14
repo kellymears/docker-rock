@@ -1,4 +1,5 @@
 import {bind} from 'helpful-decorators'
+import {pathExists} from 'fs-extra'
 import {
   cli,
   container,
@@ -6,6 +7,7 @@ import {
   fs,
   inject,
   injectable,
+  shell,
 } from './container/index.js'
 
 export interface application {
@@ -17,21 +19,21 @@ export interface application {
 
 @injectable()
 export class application {
-  public targetDir: string = process.cwd()
-
   public constructor(
-    @inject(cli) public cli: cli,
     @inject(env) public env: env,
+    @inject(fs) public fs: fs,
   ) {}
 
   @bind
-  public async copyCompose() {
-    await this.fs.copyStub('docker-compose.yml')
-  }
+  public async doBedrock() {
+    await Promise.all([
+      this.fs.copyBedrockStub('docker-compose.yml'),
+      this.fs.copyBedrockStub('docker'),
+    ])
 
-  @bind
-  public async copyDockerDir() {
-    await this.fs.copyStub('docker')
+    if (!Object.entries(env).length) {
+      await this.fs.copyBedrockStub('.env')
+    }
   }
 }
 

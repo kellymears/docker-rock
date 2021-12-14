@@ -3,8 +3,4 @@
 /db
 node_modules
 bedrock
-
-/stub/docker/db/*
-/stub/docker/db/**/*
-!/stub/docker/db/.gitkeep
 /.yarn

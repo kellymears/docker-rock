@@ -10,10 +10,13 @@ export interface shell {
 export class shell {
   public constructor(@inject(fs) public fs: fs) {}
 
-  public async $(command: string) {
-    return await execaCommand(command, {
+  public async $(app: string) {
+    const child = execaCommand(app, {
       cwd: this.fs.projectPath(),
     })
+    child.stdout?.pipe(process.stdout)
+    child.stderr?.pipe(process.stderr)
+    return await child
   }
 }
 

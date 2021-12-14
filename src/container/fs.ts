@@ -1,13 +1,7 @@
 import {container, inject, injectable} from 'tsyringe'
 
-import {
-  readJson,
-  readFile,
-  writeFile,
-  writeJson,
-  copy,
-} from 'fs-extra'
-import {resolve} from 'path'
+import * as fsx from 'fs-extra'
+import {dirname, join, resolve} from 'path'
 import {cli} from './cli.js'
 import {bind} from 'helpful-decorators'
 
@@ -37,40 +31,51 @@ export class fs {
   public async readJson(
     path: string,
   ): Promise<Record<string, any>> {
-    return await readJson(path)
+    return await fsx.readJson(path)
   }
 
   public async writeJson(
     path: string,
     content: Record<string, any>,
   ): Promise<void> {
-    writeJson(path, content)
+    fsx.writeJson(path, content)
   }
 
   public async readFile(path: string): Promise<string> {
-    return await readFile(path, 'utf8')
+    return await fsx.readFile(path, 'utf8')
   }
 
   public async writeFile(
     path: string,
     content: string,
   ): Promise<void> {
-    writeFile(path, content, 'utf8')
+    fsx.writeFile(path, content, 'utf8')
   }
 
   @bind
-  public async copyStub(path: string): Promise<void> {
-    await copy(this.stubPath(path), this.projectPath(path))
+  public async copyBedrockStub(path: string): Promise<void> {
+    await fsx.copy(
+      this.bedrockStub(path),
+      this.projectPath(path),
+    )
   }
 
-  public projectPath(path?: string): string {
-    return path ? resolve(process.cwd(), path) : process.cwd()
-  }
-
-  public stubPath(path?: string): string {
+  public bedrockStub(path?: string): string {
     return path
-      ? resolve(__dirname, '..', 'stub', path)
-      : process.cwd()
+      ? `${resolve(`stub/bedrock/${path}`)}`
+      : join(import.meta.url, 'stub')
+  }
+
+  @bind
+  public projectPath(path?: string): string {
+    return path ? join(this.target, path) : this.target
+  }
+
+  @bind
+  public async projectFileExists(
+    path: string,
+  ): Promise<boolean> {
+    return await fsx.pathExists(this.projectPath(path))
   }
 }
 
