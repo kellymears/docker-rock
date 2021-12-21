@@ -1,5 +1,6 @@
-import {bind} from 'helpful-decorators'
-import {pathExists} from 'fs-extra'
+#!/usr/bin/env node
+
+import { bind } from 'helpful-decorators'
 import {
   cli,
   container,
@@ -7,8 +8,7 @@ import {
   fs,
   inject,
   injectable,
-  shell,
-} from './container/index.js'
+} from './container'
 
 export interface application {
   targetDir: string

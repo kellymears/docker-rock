@@ -1,8 +1,8 @@
 import {container, inject, injectable} from 'tsyringe'
 
 import * as fsx from 'fs-extra'
-import {dirname, join, resolve} from 'path'
-import {cli} from './cli.js'
+import {join, resolve} from 'path'
+import {cli} from './cli'
 import {bind} from 'helpful-decorators'
 
 export interface fs {
@@ -63,7 +63,7 @@ export class fs {
   public bedrockStub(path?: string): string {
     return path
       ? `${resolve(`stub/bedrock/${path}`)}`
-      : join(import.meta.url, 'stub')
+      : join(this.projectPath(path), 'stub')
   }
 
   @bind

@@ -1,8 +1,8 @@
 import 'reflect-metadata'
-import './application.js'
+import './application'
 
 import {container} from 'tsyringe'
-import {application} from './application.js'
+import {application} from './application'
 
 /**
  * Runtime

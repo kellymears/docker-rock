@@ -1,6 +1,6 @@
 import {container, inject, injectable} from 'tsyringe'
-import {ExecaChildProcess, execaCommand} from 'execa'
-import {fs} from './fs.js'
+import execa, {ExecaChildProcess} from 'execa'
+import {fs} from './fs'
 
 export interface shell {
   (command: string): Promise<ExecaChildProcess>
@@ -11,7 +11,7 @@ export class shell {
   public constructor(@inject(fs) public fs: fs) {}
 
   public async $(app: string) {
-    const child = execaCommand(app, {
+    const child = execa.command(app, {
       cwd: this.fs.projectPath(),
     })
     child.stdout?.pipe(process.stdout)
